@@ -11,7 +11,7 @@ export function getDataStoreHelperFunctions(
 	node: INode,
 ): DataStoreProxyFunctions {
 	return {
-		getProxy: async <T extends string | undefined>(dataStoreId?: T) =>
-			await additionalData.dataStoreProxy.getProxy(workflow, node, dataStoreId),
+		getDataStoreProxy: async <T extends string | undefined>(dataStoreId?: T) =>
+			await additionalData.dataStoreProxy.getDataStoreProxy(workflow, node, dataStoreId),
 	};
 }

@@ -24,12 +24,17 @@ export class DataStoreProxyService {
 		this.logger = this.logger.scoped('data-store');
 	}
 
-	async getProxy(
+	async getDataStoreProxy(
 		workflow: Workflow,
 		node: INode,
-		dataStoreId: string,
+		dataStoreId?: undefined,
+	): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'> & Partial<IDataStoreProjectService>>;
+	async getDataStoreProxy(
+		workflow: Workflow,
+		node: INode,
+		dataStoreId?: string,
 	): Promise<IDataStoreProjectService>;
-	async getProxy<T extends string | undefined>(
+	async getDataStoreProxy<T extends string | undefined>(
 		workflow: Workflow,
 		node: INode,
 		dataStoreId?: T,

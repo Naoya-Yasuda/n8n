@@ -891,12 +891,12 @@ type FunctionsBaseWithRequiredKeys<Keys extends keyof FunctionsBase> = Functions
 export type ContextType = 'flow' | 'node';
 
 export type DataStoreProxy = {
-	getProxy(
+	getDataStoreProxy(
 		workflow: Workflow,
 		node: INode,
 		dataStoreId?: undefined,
 	): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'>>;
-	getProxy(
+	getDataStoreProxy(
 		workflow: Workflow,
 		node: INode,
 		dataStoreId?: string,
@@ -904,8 +904,10 @@ export type DataStoreProxy = {
 };
 
 export type DataStoreProxyFunctions = {
-	getProxy(dataStoreId?: undefined): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'>>;
-	getProxy(dataStoreId?: string): Promise<IDataStoreProjectService>;
+	getDataStoreProxy(
+		dataStoreId?: undefined,
+	): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'>>;
+	getDataStoreProxy(dataStoreId?: string): Promise<IDataStoreProjectService>;
 };
 
 type BaseExecutionFunctions = FunctionsBaseWithRequiredKeys<'getMode'> & {

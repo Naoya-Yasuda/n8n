@@ -8,15 +8,15 @@ export const createDataStoreTable = async (
 	context: IRestApiContext,
 	projectId: string,
 	data: CreateDataStoreDto,
-): Promise<DataStore | string> =>
-	await makeRestApiRequest(context, 'POST', `/projects/${projectId}/data-store`, data);
-
+): Promise<DataStore | string> => {
+	return await makeRestApiRequest(context, 'POST', `/projects/${projectId}/data-stores`, data);
+};
 export const listDataStoreTable = async (
 	context: IRestApiContext,
 	projectId: string,
 	data: Partial<ListDataStoreQueryDto> = {},
 ): Promise<DataStore | string> =>
-	await makeRestApiRequest(context, 'GET', `/projects/${projectId}/data-store`, data);
+	await makeRestApiRequest(context, 'GET', `/projects/${projectId}/data-stores`, data);
 
 // dev util to run code
 export const playground = async () => {
@@ -28,7 +28,7 @@ export const playground = async () => {
 	}
 	{
 		const result = await createDataStoreTable(context, project.id, {
-			name: 'myFirstTable' + Math.random(),
+			name: 'myFirstTable',
 			columns: [],
 		});
 		console.log(result);
