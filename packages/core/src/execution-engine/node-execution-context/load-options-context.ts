@@ -13,6 +13,7 @@ import { NodeExecutionContext } from './node-execution-context';
 import { extractValue } from './utils/extract-value';
 import { getRequestHelperFunctions } from './utils/request-helper-functions';
 import { getSSHTunnelFunctions } from './utils/ssh-tunnel-helper-functions';
+import { getDataStoreHelperFunctions } from './utils/data-store-helper-functions';
 
 export class LoadOptionsContext extends NodeExecutionContext implements ILoadOptionsFunctions {
 	readonly helpers: ILoadOptionsFunctions['helpers'];
@@ -28,6 +29,7 @@ export class LoadOptionsContext extends NodeExecutionContext implements ILoadOpt
 		this.helpers = {
 			...getSSHTunnelFunctions(),
 			...getRequestHelperFunctions(workflow, node, additionalData),
+			...getDataStoreHelperFunctions(additionalData.dataStoreService, workflow, node),
 		};
 	}
 

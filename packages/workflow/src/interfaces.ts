@@ -14,6 +14,7 @@ import type { URLSearchParams } from 'url';
 
 import type { CODE_EXECUTION_MODES, CODE_LANGUAGES, LOG_LEVELS } from './constants';
 import type { IDeferredPromise } from './deferred-promise';
+import type { IDataStoreProjectService } from './data-store.types';
 import type { ExecutionCancelledError } from './errors';
 import type { ExpressionError } from './errors/expression.error';
 import type { NodeApiError } from './errors/node-api.error';
@@ -839,6 +840,10 @@ export interface SSHTunnelFunctions {
 	updateLastUsed(client: SSHClient): void;
 }
 
+export interface DataStoreProxyFunctions {
+	dataStoreProxy: () => IDataStoreProjectService;
+}
+
 type CronUnit = number | '*' | `*/${number}`;
 export type CronExpression =
 	`${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit}`;
@@ -951,7 +956,8 @@ export type IExecuteFunctions = ExecuteFunctions.GetNodeParameterFn &
 			BinaryHelperFunctions &
 			DeduplicationHelperFunctions &
 			FileSystemHelperFunctions &
-			SSHTunnelFunctions & {
+			SSHTunnelFunctions &
+			DataStoreProxyFunctions & {
 				normalizeItems(items: INodeExecutionData | INodeExecutionData[]): INodeExecutionData[];
 				constructExecutionMetaData(
 					inputData: INodeExecutionData[],
@@ -1035,7 +1041,7 @@ export interface ILoadOptionsFunctions extends FunctionsBase {
 	): NodeParameterValueType | object | undefined;
 	getCurrentNodeParameters(): INodeParameters | undefined;
 
-	helpers: RequestHelperFunctions & SSHTunnelFunctions;
+	helpers: RequestHelperFunctions & SSHTunnelFunctions & DataStoreProxyFunctions;
 }
 
 export type FieldValueOption = { name: string; type: FieldType | 'any' };

@@ -6,6 +6,7 @@ import * as TelemetryHelpers from './telemetry-helpers';
 export * from './errors';
 export * from './constants';
 export * from './cron';
+export * from './data-store.types';
 export * from './deferred-promise';
 export * from './global-state';
 export * from './interfaces';

@@ -1,10 +1,7 @@
-import type {
-	ListDataStoreContentQueryDto,
-	DataStoreUserTableName,
-	DataStoreRows,
-} from '@n8n/api-types';
+import type { ListDataStoreContentQueryDto, DataStoreUserTableName } from '@n8n/api-types';
 import { Service } from '@n8n/di';
 import { DataSource, SelectQueryBuilder } from '@n8n/typeorm';
+import { DataStoreRows } from 'n8n-workflow';
 
 import { insertIntoQuery } from './utils/sql-utils';
 

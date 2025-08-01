@@ -5,14 +5,13 @@ import type {
 	ListDataStoreContentQueryDto,
 	MoveDataStoreColumnDto,
 	DataStoreListOptions,
-	DataStoreRows,
 	DataStoreUserTableName,
 	IDataStoreService,
 } from '@n8n/api-types';
 import { UpdateDataStoreDto } from '@n8n/api-types/src/dto/data-store/update-data-store.dto';
 import { Logger } from '@n8n/backend-common';
 import { Service } from '@n8n/di';
-import { UserError } from 'n8n-workflow';
+import { DataStoreRows, UserError } from 'n8n-workflow';
 
 import { DataStoreConfig } from './data-store';
 import { DataStoreColumnRepository } from './data-store-column.repository';

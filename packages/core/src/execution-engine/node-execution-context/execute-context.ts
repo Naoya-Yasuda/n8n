@@ -44,6 +44,7 @@ import { normalizeItems } from './utils/normalize-items';
 import { getRequestHelperFunctions } from './utils/request-helper-functions';
 import { returnJsonArray } from './utils/return-json-array';
 import { getSSHTunnelFunctions } from './utils/ssh-tunnel-helper-functions';
+import { getDataStoreHelperFunctions } from './utils/data-store-helper-functions';
 
 export class ExecuteContext extends BaseExecuteContext implements IExecuteFunctions {
 	readonly helpers: IExecuteFunctions['helpers'];
@@ -94,6 +95,7 @@ export class ExecuteContext extends BaseExecuteContext implements IExecuteFuncti
 				connectionInputData,
 			),
 			...getBinaryHelperFunctions(additionalData, workflow.id),
+			...getDataStoreHelperFunctions(additionalData.dataStoreService, workflow, node),
 			...getSSHTunnelFunctions(),
 			...getFileSystemHelperFunctions(node),
 			...getDeduplicationHelperFunctions(workflow, node),

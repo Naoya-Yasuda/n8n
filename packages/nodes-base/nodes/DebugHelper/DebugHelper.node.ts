@@ -253,6 +253,7 @@ export class DebugHelper implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		console.log('AAAA', this.helpers.dataStoreProxy());
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 		const category = this.getNodeParameter('category', 0) as string;
