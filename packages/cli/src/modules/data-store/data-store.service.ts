@@ -7,6 +7,7 @@ import type {
 	DataStoreListOptions,
 	DataStoreRows,
 	DataStoreUserTableName,
+	IDataStoreService,
 } from '@n8n/api-types';
 import { UpdateDataStoreDto } from '@n8n/api-types/src/dto/data-store/update-data-store.dto';
 import { Logger } from '@n8n/backend-common';
@@ -23,7 +24,7 @@ function toTableName(dataStoreId: string): DataStoreUserTableName {
 }
 
 @Service()
-export class DataStoreService {
+export class DataStoreService implements IDataStoreService {
 	private intervalId?: NodeJS.Timeout;
 
 	constructor(

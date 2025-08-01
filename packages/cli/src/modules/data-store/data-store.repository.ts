@@ -26,7 +26,8 @@ export class DataStoreRepository extends Repository<DataStoreEntity> {
 
 	async getManyAndCount(options: DataStoreListOptions) {
 		const query = this.getManyQuery(options);
-		return await query.getManyAndCount();
+		const [data, count] = await query.getManyAndCount();
+		return { count, data };
 	}
 
 	async getMany(options: DataStoreListOptions) {

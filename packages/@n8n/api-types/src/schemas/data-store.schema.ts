@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import type {
 	AddDataStoreColumnDto,
 	CreateDataStoreDto,
@@ -8,8 +10,7 @@ import type {
 	ListDataStoreQueryDto,
 	MoveDataStoreColumnDto,
 	UpdateDataStoreDto,
-} from 'dto';
-import { z } from 'zod';
+} from '../dto';
 
 export const dataStoreNameSchema = z.string().trim().min(1).max(128);
 export const dataStoreIdSchema = z.string().max(36);
@@ -42,8 +43,8 @@ export const dataStoreSchema = z.object({
 	id: dataStoreIdSchema,
 	name: dataStoreNameSchema,
 	columns: z.array(dataStoreColumnSchema),
-	createdAt: z.string().datetime(),
-	updatedAt: z.string().datetime(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
 });
 export type DataStore = z.infer<typeof dataStoreSchema>;
 export type DataStoreColumn = z.infer<typeof dataStoreColumnSchema>;
@@ -67,7 +68,9 @@ export type DataStoreRows = Array<Record<PropertyKey, DataStoreColumnJsType | nu
 export interface IDataStoreService {
 	createDataStore(projectId: string, dto: CreateDataStoreDto): Promise<DataStoreResultDto>;
 	updateDataStore(dataStoreId: string, dto: UpdateDataStoreDto): Promise<boolean>;
-	getManyAndCount(options: DataStoreListOptions): Promise<DataStoreResultDto[]>;
+	getManyAndCount(
+		options: DataStoreListOptions,
+	): Promise<{ count: number; data: DataStoreResultDto[] }>;
 
 	deleteDataStoreByProjectId(projectId: string): Promise<boolean>;
 	deleteDataStoreAll(): Promise<boolean>;
@@ -81,6 +84,6 @@ export interface IDataStoreService {
 	getManyRowsAndCount(
 		dataStoreId: string,
 		dto: Partial<ListDataStoreContentQueryDto>,
-	): Promise<DataStoreRows[]>;
+	): Promise<{ count: number; data: DataStoreRows[] }>;
 	appendRows(dataStoreId: string, rows: DataStoreRows): Promise<boolean>;
 }

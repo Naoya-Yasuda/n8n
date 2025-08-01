@@ -48,11 +48,11 @@ export class DataStoreRowsRepository {
 		dto: Partial<ListDataStoreContentQueryDto>,
 	) {
 		const [countQuery, query] = this.getManyQuery(dataStoreId, dto);
-		const result = await query.select('*').getRawMany();
-		const totalCount = (await countQuery.select('COUNT(*)').getRawOne())['COUNT(*)'] as
+		const data = await query.select('*').getRawMany();
+		const count = (await countQuery.select('COUNT(*)').getRawOne())['COUNT(*)'] as
 			| number
 			| undefined;
-		return [totalCount ?? -1, result];
+		return { count: count ?? -1, data };
 	}
 
 	async getRowIds(dataStoreId: DataStoreUserTableName, dto: Partial<ListDataStoreContentQueryDto>) {

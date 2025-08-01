@@ -1,10 +1,13 @@
-import { DATA_STORE_COLUMN_REGEX, type DataStoreCreateColumnSchema } from '@n8n/api-types';
+import {
+	DATA_STORE_COLUMN_REGEX,
+	type DataStoreCreateColumnSchema,
+	type DataStoreRows,
+	type DataStoreUserTableName,
+} from '@n8n/api-types';
 import type { DataSourceOptions } from '@n8n/typeorm';
 import { UnexpectedError } from 'n8n-workflow';
 
 import { NotFoundError } from '@/errors/response-errors/not-found.error';
-
-import type { DataStoreRows, DataStoreUserTableName } from '../data-store.types';
 
 function dataStoreColumnTypeToSql(type: DataStoreCreateColumnSchema['type']) {
 	switch (type) {

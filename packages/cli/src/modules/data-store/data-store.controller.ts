@@ -44,12 +44,10 @@ export class DataStoreController {
 		@Body payload: Partial<ListDataStoreQueryDto> = {},
 	) {
 		const providedFilter = payload?.filter ?? {};
-		const [data, count] = await this.dataStoreService.getManyAndCount({
+		return await this.dataStoreService.getManyAndCount({
 			...payload,
 			filter: { ...providedFilter, projectId: req.params.projectId },
 		});
-
-		return { count, data };
 	}
 
 	@Patch('/:dataStoreId')
