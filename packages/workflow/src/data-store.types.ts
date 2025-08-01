@@ -22,7 +22,7 @@ export type CreateDataStoreColumnPayload = Pick<DataStoreColumn, 'name' | 'type'
 	Partial<Pick<DataStoreColumn, 'columnIndex'>>;
 
 export type CreateDataStorePayload = Pick<DataStore, 'name'> & {
-	columns: CreateDataStoreColumnPayload;
+	columns: CreateDataStoreColumnPayload[];
 };
 
 export type UpdateDataStorePayload = { name: string };
@@ -42,9 +42,18 @@ export type ListDataStoreOptions = {
 	skip?: number;
 };
 
+export type ListDataStoreContentFilter = {
+	type: 'and' | 'or';
+	filters: Array<{
+		columnName: string;
+		condition: 'eq' | 'neq';
+		value: string | number | boolean | Date;
+	}>;
+};
+
 export type ListDataStoreRowsOptions = {
-	filter?: Record<string, string | string[]>;
-	sortBy?: Array<[string, 'ASC' | 'DESC']>;
+	filter?: ListDataStoreContentFilter;
+	sortBy?: [string, 'ASC' | 'DESC'];
 	take?: number;
 	skip?: number;
 };
@@ -63,21 +72,20 @@ export type DataStoreRows = Array<Record<PropertyKey, DataStoreColumnJsType | nu
 
 // API for a data store service operating on a specific projectId
 export interface IDataStoreProjectService {
-	createDataStore(dto: CreateDataStorePayload): Promise<DataStore>;
-	updateDataStore(dataStoreId: string, dto: UpdateDataStorePayload): Promise<boolean>;
+	// createDataStore(dto: CreateDataStorePayload): Promise<DataStore>;
+	// updateDataStore(dto: UpdateDataStorePayload): Promise<boolean>;
 	getManyAndCount(options: ListDataStoreOptions): Promise<{ count: number; data: DataStore[] }>;
 
-	deleteDataStoreAll(): Promise<boolean>;
-	deleteDataStore(dataStoreId: string): Promise<boolean>;
+	// deleteDataStoreAll(): Promise<boolean>;
+	// deleteDataStore(dataStoreId: string): Promise<boolean>;
 
-	getColumns(dataStoreId: string): Promise<DataStoreColumn[]>;
-	addColumn(dataStoreId: string, dto: CreateDataStoreColumnPayload): Promise<DataStoreColumn>;
-	moveColumn(dataStoreId: string, columnId: string, dto: MoveDataStoreColumn): Promise<boolean>;
-	deleteColumn(dataStoreId: string, dto: DeleteDataStoreColumn): Promise<boolean>;
+	getColumns(): Promise<DataStoreColumn[]>;
+	// addColumn(dto: CreateDataStoreColumnPayload): Promise<DataStoreColumn>;
+	// moveColumn(columnId: string, dto: MoveDataStoreColumn): Promise<boolean>;
+	// deleteColumn(dto: DeleteDataStoreColumn): Promise<boolean>;
 
 	getManyRowsAndCount(
-		dataStoreId: string,
 		dto: Partial<ListDataStoreRowsOptions>,
 	): Promise<{ count: number; data: DataStoreRows[] }>;
-	appendRows(dataStoreId: string, rows: DataStoreRows): Promise<boolean>;
+	appendRows(rows: DataStoreRows): Promise<boolean>;
 }

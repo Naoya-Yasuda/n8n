@@ -1,24 +1,17 @@
-import type { IDataStoreService } from '@n8n/api-types';
 import type {
 	DataStoreProxyFunctions,
 	INode,
 	Workflow,
-	IDataStoreProjectService,
+	IWorkflowExecuteAdditionalData,
 } from 'n8n-workflow';
 
 export function getDataStoreHelperFunctions(
-	dataStoreService: IDataStoreService,
+	additionalData: IWorkflowExecuteAdditionalData,
 	workflow: Workflow,
 	node: INode,
 ): DataStoreProxyFunctions {
 	return {
-		dataStoreProxy: (): IDataStoreProjectService => {
-			console.log(node.type);
-			// if (node.type !== 'n8n-nodes-base.dataStore') {
-			// 	throw new Error('This helper is only available for data store nodes');
-			// }
-
-			return dataStoreService as never;
-		},
+		getProxy: async <T extends string | undefined>(dataStoreId?: T) =>
+			await additionalData.dataStoreProxy.getProxy(workflow, node, dataStoreId),
 	};
 }

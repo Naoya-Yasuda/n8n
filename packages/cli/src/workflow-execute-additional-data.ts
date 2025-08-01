@@ -51,7 +51,7 @@ import { TaskRequester } from '@/task-runners/task-managers/task-requester';
 import { findSubworkflowStart } from '@/utils';
 import { objectToError } from '@/utils/object-to-error';
 import * as WorkflowHelpers from '@/workflow-helpers';
-import { DataStoreService } from './modules/data-store/data-store.service';
+import { DataStoreProxyService } from './modules/data-store/data-store-proxy.service';
 
 export async function getRunData(
 	workflowData: IWorkflowBase,
@@ -379,7 +379,7 @@ export async function getBase(
 	const eventService = Container.get(EventService);
 
 	return {
-		dataStoreService: Container.get(DataStoreService), // this is where the proxy will go
+		dataStoreProxy: Container.get(DataStoreProxyService), // this is where the proxy will go
 		currentNodeExecutionIndex: 0,
 		credentialsHelper: Container.get(CredentialsHelper),
 		executeWorkflow,

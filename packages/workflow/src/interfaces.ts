@@ -14,7 +14,6 @@ import type { URLSearchParams } from 'url';
 
 import type { CODE_EXECUTION_MODES, CODE_LANGUAGES, LOG_LEVELS } from './constants';
 import type { IDeferredPromise } from './deferred-promise';
-import type { IDataStoreProjectService } from './data-store.types';
 import type { ExecutionCancelledError } from './errors';
 import type { ExpressionError } from './errors/expression.error';
 import type { NodeApiError } from './errors/node-api.error';
@@ -25,6 +24,7 @@ import type { ExecutionStatus } from './execution-status';
 import type { Result } from './result';
 import type { Workflow } from './workflow';
 import type { EnvProviderState } from './workflow-data-proxy-env-provider';
+import type { IDataStoreProjectService } from './data-store.types';
 
 export interface IAdditionalCredentialOptions {
 	oauth2?: IOAuth2Options;
@@ -840,10 +840,6 @@ export interface SSHTunnelFunctions {
 	updateLastUsed(client: SSHClient): void;
 }
 
-export interface DataStoreProxyFunctions {
-	dataStoreProxy: () => IDataStoreProjectService;
-}
-
 type CronUnit = number | '*' | `*/${number}`;
 export type CronExpression =
 	`${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit} ${CronUnit}`;
@@ -893,6 +889,24 @@ type FunctionsBaseWithRequiredKeys<Keys extends keyof FunctionsBase> = Functions
 };
 
 export type ContextType = 'flow' | 'node';
+
+export type DataStoreProxy = {
+	getProxy(
+		workflow: Workflow,
+		node: INode,
+		dataStoreId?: undefined,
+	): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'>>;
+	getProxy(
+		workflow: Workflow,
+		node: INode,
+		dataStoreId?: string,
+	): Promise<IDataStoreProjectService>;
+};
+
+export type DataStoreProxyFunctions = {
+	getProxy(dataStoreId?: undefined): Promise<Pick<IDataStoreProjectService, 'getManyAndCount'>>;
+	getProxy(dataStoreId?: string): Promise<IDataStoreProjectService>;
+};
 
 type BaseExecutionFunctions = FunctionsBaseWithRequiredKeys<'getMode'> & {
 	continueOnFail(): boolean;
