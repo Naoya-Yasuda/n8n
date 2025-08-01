@@ -1,4 +1,4 @@
-import {
+import type {
 	AddDataStoreColumnDto,
 	CreateDataStoreDto,
 	DeleteDataStoreColumnDto,
@@ -6,6 +6,7 @@ import {
 	ListDataStoreQueryDto,
 	MoveDataStoreColumnDto,
 	UpdateDataStoreDto,
+	DataStoreRows,
 } from '@n8n/api-types';
 import { AuthenticatedRequest } from '@n8n/db';
 import {
@@ -20,7 +21,6 @@ import {
 } from '@n8n/decorators';
 
 import { DataStoreService } from './data-store.service';
-import { DataStoreRows } from './data-store.types';
 
 @RestController('/projects/:projectId/data-stores')
 export class DataStoreController {

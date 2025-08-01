@@ -1,3 +1,14 @@
+import type {
+	AddDataStoreColumnDto,
+	CreateDataStoreDto,
+	DataStoreColumnResultDto,
+	DataStoreResultDto,
+	DeleteDataStoreColumnDto,
+	ListDataStoreContentQueryDto,
+	ListDataStoreQueryDto,
+	MoveDataStoreColumnDto,
+	UpdateDataStoreDto,
+} from 'dto';
 import { z } from 'zod';
 
 export const dataStoreNameSchema = z.string().trim().min(1).max(128);
@@ -24,8 +35,6 @@ export const dataStoreCreateColumnSchema = z.object({
 export type DataStoreCreateColumnSchema = z.infer<typeof dataStoreCreateColumnSchema>;
 
 export const dataStoreColumnSchema = dataStoreCreateColumnSchema.extend({
-	createdAt: z.string().datetime(),
-	updatedAt: z.string().datetime(),
 	dataStoreId: dataStoreIdSchema,
 });
 
@@ -38,3 +47,40 @@ export const dataStoreSchema = z.object({
 });
 export type DataStore = z.infer<typeof dataStoreSchema>;
 export type DataStoreColumn = z.infer<typeof dataStoreColumnSchema>;
+
+export type DataStoreUserTableName = `data_store_user_${string}`;
+
+export type DataStoreListFilter = {
+	id?: string | string[];
+	projectId?: string | string[];
+	name?: string;
+};
+
+export type DataStoreListOptions = Partial<ListDataStoreQueryDto> & {
+	filter: { projectId: string };
+};
+
+export type DataStoreColumnJsType = string | number | boolean | Date;
+
+export type DataStoreRows = Array<Record<PropertyKey, DataStoreColumnJsType | null>>;
+
+export interface IDataStoreService {
+	createDataStore(projectId: string, dto: CreateDataStoreDto): Promise<DataStoreResultDto>;
+	updateDataStore(dataStoreId: string, dto: UpdateDataStoreDto): Promise<boolean>;
+	getManyAndCount(options: DataStoreListOptions): Promise<DataStoreResultDto[]>;
+
+	deleteDataStoreByProjectId(projectId: string): Promise<boolean>;
+	deleteDataStoreAll(): Promise<boolean>;
+	deleteDataStore(dataStoreId: string): Promise<boolean>;
+
+	getColumns(dataStoreId: string): Promise<DataStoreColumnResultDto[]>;
+	addColumn(dataStoreId: string, dto: AddDataStoreColumnDto): Promise<DataStoreColumnResultDto>;
+	moveColumn(dataStoreId: string, columnId: string, dto: MoveDataStoreColumnDto): Promise<boolean>;
+	deleteColumn(dataStoreId: string, dto: DeleteDataStoreColumnDto): Promise<boolean>;
+
+	getManyRowsAndCount(
+		dataStoreId: string,
+		dto: Partial<ListDataStoreContentQueryDto>,
+	): Promise<DataStoreRows[]>;
+	appendRows(dataStoreId: string, rows: DataStoreRows): Promise<boolean>;
+}

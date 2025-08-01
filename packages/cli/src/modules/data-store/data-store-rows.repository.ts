@@ -1,8 +1,11 @@
-import { ListDataStoreContentQueryDto } from '@n8n/api-types';
+import type {
+	ListDataStoreContentQueryDto,
+	DataStoreUserTableName,
+	DataStoreRows,
+} from '@n8n/api-types';
 import { Service } from '@n8n/di';
 import { DataSource, SelectQueryBuilder } from '@n8n/typeorm';
 
-import { DataStoreRows, DataStoreUserTableName } from './data-store.types';
 import { insertIntoQuery } from './utils/sql-utils';
 
 // type QueryBuilder = SelectQueryBuilder<Record<PropertyKey, unknown>>;
