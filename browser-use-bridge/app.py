@@ -21,8 +21,8 @@ async def run_task(request: dict):
 
     # AWS Bedrock LLM設定
     llm = ChatAWSBedrock(
-        model="anthropic.claude-3-sonnet-20240229-v1:0",
-        aws_region="us-east-1"
+        model="anthropic.claude-3-5-sonnet-20240620-v1:0",
+        aws_region="ap-northeast-1"
     )
 
     # Browser-Use Agent作成
