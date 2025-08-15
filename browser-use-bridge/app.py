@@ -4,6 +4,8 @@ from browser_use import Agent  # ← 普通のbrowser-useライブラリ
 from browser_use.llm import ChatAWSBedrock
 import asyncio
 import uuid
+import os
+import boto3
 from typing import Dict
 
 app = FastAPI()
@@ -19,10 +21,12 @@ async def health_check():
 async def run_task(request: dict):
     task_id = str(uuid.uuid4())
 
-    # AWS Bedrock LLM設定
+        # AWS Bedrock LLM設定（環境変数を使用）
     llm = ChatAWSBedrock(
-        model="anthropic.claude-3-5-sonnet-20240620-v1:0",
-        aws_region="ap-northeast-1"
+        model="anthropic.claude-3-5-sonnet-20241022-v2:0",
+        aws_region="ap-northeast-1",
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
     )
 
     # Browser-Use Agent作成
