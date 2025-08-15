@@ -6,6 +6,7 @@ import asyncio
 import uuid
 import os
 import boto3
+import aiohttp
 from typing import Dict
 from pydantic import BaseModel
 
@@ -15,6 +16,7 @@ app = FastAPI()
 class TaskRequest(BaseModel):
     task: str
     description: str = ""
+    webhook_url: str = ""  # webhook URLを追加
 
 # タスク管理
 tasks: Dict[str, dict] = {}
@@ -29,7 +31,7 @@ async def run_task(request: TaskRequest):
 
     # AWS Bedrock LLM設定（環境変数を使用）
     llm = ChatAWSBedrock(
-        model="apac.anthropic.claude-3-5-sonnet-20241022-v2:0",
+        model="anthropic.claude-3-5-sonnet-20240620-v1:0",
         aws_region="ap-northeast-1",
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
         aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -41,8 +43,8 @@ async def run_task(request: TaskRequest):
         llm=llm
     )
 
-    # バックグラウンドでタスク実行
-    asyncio.create_task(execute_task(task_id, agent))
+    # バックグラウンドでタスク実行（webhook URLを渡す）
+    asyncio.create_task(execute_task(task_id, agent, request.webhook_url))
 
     return {
         "task_id": task_id,
@@ -51,7 +53,7 @@ async def run_task(request: TaskRequest):
         "status_url": f"/api/v1/task/{task_id}/status"
     }
 
-async def execute_task(task_id: str, agent):
+async def execute_task(task_id: str, agent, webhook_url: str = ""):
     start_time = asyncio.get_event_loop().time()
     try:
         tasks[task_id] = {
@@ -77,6 +79,10 @@ async def execute_task(task_id: str, agent):
             "completed_at": end_time,
             "total_duration_seconds": round(end_time - start_time, 2)
         }
+
+        # webhook URLが指定されている場合は通知
+        if webhook_url:
+            asyncio.create_task(send_webhook(webhook_url, task_id, "completed", result))
     except Exception as e:
         end_time = asyncio.get_event_loop().time()
         tasks[task_id] = {
@@ -86,6 +92,10 @@ async def execute_task(task_id: str, agent):
             "failed_at": end_time,
             "total_duration_seconds": round(end_time - start_time, 2)
         }
+
+        # webhook URLが指定されている場合は通知
+        if webhook_url:
+            asyncio.create_task(send_webhook(webhook_url, task_id, "failed", {"error": str(e)}))
 
 async def update_progress(task_id: str, start_time: float):
     """定期的にプログレス情報を更新"""
@@ -123,6 +133,25 @@ async def get_task_status(task_id: str):
         asyncio.create_task(cleanup_task(task_id, delay=3600))
 
     return task_info
+
+async def send_webhook(webhook_url: str, task_id: str, status: str, data: dict):
+    """webhookを送信"""
+    try:
+        payload = {
+            "task_id": task_id,
+            "status": status,
+            "timestamp": asyncio.get_event_loop().time(),
+            "data": data
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(webhook_url, json=payload) as response:
+                if response.status == 200:
+                    print(f"Webhook sent successfully to {webhook_url}")
+                else:
+                    print(f"Webhook failed with status {response.status}")
+    except Exception as e:
+        print(f"Webhook error: {e}")
 
 async def cleanup_task(task_id: str, delay: int):
     """指定時間後にタスク情報を削除"""
