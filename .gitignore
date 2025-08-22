@@ -1,0 +1,56 @@
+node_modules
+.DS_Store
+.tmp
+tmp
+dist
+coverage
+npm-debug.log*
+yarn.lock
+google-generated-credentials.json
+_START_PACKAGE
+.env
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.default.json
+.idea
+nodelinter.config.json
+**/package-lock.json
+packages/**/.turbo
+.turbo
+*.tsbuildinfo
+*.swp
+CHANGELOG-*.md
+*.mdx
+build-storybook.log
+*.junit.xml
+junit.xml
+test-results.json
+*.0x
+packages/testing/playwright/playwright-report
+packages/testing/playwright/test-results
+packages/testing/playwright/ms-playwright-cache
+test-results/
+compiled_app_output
+trivy_report*
+compiled
+packages/cli/src/modules/my-feature
+# 設定・認証情報
+.env
+.aws/
+settings.local.json
+
+# ワークフロー（n8n管理）
+n8n-workflows/
+
+# 不要な開発ディレクトリ・ファイル  
+cypress/
+aws/dist/
+# 一時・実行時ファイル  
+*.log
+*.tmp
+screenshots/
+*test*.py
+# バックアップファイル
+*.bak
+*.json.bak
+*.env.bak

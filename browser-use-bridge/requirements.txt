@@ -1,0 +1,11 @@
+﻿# requirements.txt
+fastapi==0.115.0
+uvicorn==0.32.0
+browser-use==0.5.7    # ← 最新の安定バージョン
+playwright==1.52.0
+boto3>=1.39.7         # AWS Bedrock用（langchain-awsとの互換性のため）
+openai>=1.97.0        # OpenAI用（browser-useライブラリの要求に合わせる）
+langchain-aws>=0.1.0  # AWS Bedrock Converse API用
+pydantic==2.11.5
+python-dotenv==1.0.1
+aiohttp==3.9.1

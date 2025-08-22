@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_POSTGRESDB_DATABASE}
+      - POSTGRES_USER=${DB_POSTGRESDB_USER}
+      - POSTGRES_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    build: .
+    # image: docker.n8n.io/n8nio/n8n:latest  # カスタムビルドを使用する場合はコメントアウト
+    restart: always
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n-workflows:/home/node/.n8n/workflows
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  browser-use-bridge:
+    build: ./browser-use-bridge
+    restart: always
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  n8n_data:
